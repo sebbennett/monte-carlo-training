@@ -1,5 +1,4 @@
 import numpy as np
-
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
@@ -13,6 +12,9 @@ class FinancialStock:
     def generate_stock_value(self, method='random_uniform', limits:tuple=(100,1000)):
         if method == 'random_uniform':
             self.value = round(np.random.uniform(limits[0], limits[1]),2)
+            self.starting_value = self.value
+        elif method == 'gaussian':
+            self.value = round(np.random.normal(limits[0], limits[1]),2)
             self.starting_value = self.value
         else:
             raise ValueError(f'Method {method} is not known')
@@ -32,9 +34,15 @@ class FinancialStock:
     def invest_money(self, amount):
         self.invested += amount
 
-
-
         
 if __name__=='__main__':
-    pass
+    fs = FinancialStock()
+    fs.generate_stock_value()
+    print(f"{fs.starting_value}")
     
+    output = []
+    for _ in range(10000):
+        fs.generate_stock_value('gaussian',limits=(17, 2.8))
+        output.append(fs.value)
+
+    plt.hist(output)
